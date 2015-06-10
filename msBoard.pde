@@ -39,9 +39,14 @@ void draw()
  int column = pixel_to_column(mouseY);
  fill(0);
  textSize(32);
- text( ""+ row , 460, 460);
- text( ""+ column , 480, 460);
- text( ""+ board[row][column].num , 480, 430);
+ 
+ if (!(row < 0) && (row < grid_length) && !(column < 0) && (column < grid_width))
+ {
+   text(str(row), 460, 460);
+   text(str(column), 480, 460);
+   text(str(board[row][column].num), 480, 430);
+ }
+ else text("XX", 460, 460);
   
 }
 
