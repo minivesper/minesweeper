@@ -3,12 +3,15 @@ final int X_OFFSET = 5, Y_OFFSET = 2;
 Boardobjects [][] board;
 int grid_width = 9;
 int grid_length = 9;
+int ui_X = 5, ui_Y = 50;
+
 int num_mines = 10;
 boolean playing = true;
 
+
 void setup()
 {
-  size(500,500);
+  size((SCALE + xbet) * grid_length + ui_X, (SCALE + ybet) * grid_width + ui_Y);
   background(255);
   createboard();
   setit();
@@ -34,7 +37,7 @@ void draw()
 {
  fill(255);
  stroke(255);
- rect(450, 400, 60, 60);
+ rect(0, height - ui_Y, width, ui_Y);
  int row = pixel_to_row(mouseX);
  int column = pixel_to_column(mouseY);
  fill(0);
@@ -42,11 +45,10 @@ void draw()
  
  if (!(row < 0) && (row < grid_length) && !(column < 0) && (column < grid_width))
  {
-   text(str(row), 460, 460);
-   text(str(column), 480, 460);
-   text(str(board[row][column].num), 480, 430);
+   text(str(row)+ "," + str(column), 20, height - 20);
+   text("Value: " + str(board[row][column].num), 80, height - 20);
  }
- else text("XX", 460, 460);
+ else text("Out", 20, height - 20);
   
 }
 
@@ -84,27 +86,7 @@ void draw()
       {
         for (int j=0; j<grid_length; j++)
         {
-          if(board[i][j].mine == false)
-          {
-            final int [] delta_y1={-1, -1, -1, 0, 0, 1, 1, 1};
-            final int [] delta_x1={-1, 0, 1, -1, 1, -1, 0, 1};
-            int mine_count=0;
-            for (int k=0; k<8; k++)
-            {
-              int y_new= i+ delta_y1[k];
-              int x_new = j+ delta_x1[k];
-                if(y_new <= grid_length-1 &&
-                  y_new >= 1 &&
-                  x_new <= grid_width -1 &&
-                  x_new >= 1 &&
-                  board[y_new][x_new].mine == true )
-                {
-                  mine_count++;
-                }
-            }
-          board[i][j].num = mine_count;
-          board[i][j].number = Integer.toString(mine_count);
-        }
+          board[i][j].calc_box();
         }
       }
   }
@@ -198,7 +180,6 @@ class Boardobjects
   boolean covered = true;
   final float bWidth  =  (.5) * SCALE;
   final float bHeight = (1.5) * SCALE ;
-  String number;
 
       public Boardobjects(int init_x, int init_y )
       {        
@@ -207,34 +188,34 @@ class Boardobjects
       }
      
      void draw_bbox(boolean covered)
-    {
-      if(covered)
-      {
-        fill( 0, 10, 100 );
-        stroke( 10, 100, 200 );
-      }
-      else
-      {
-        fill( 100, 50, 100 );
-        stroke( 10, 100, 200 );
-      }
-        rect(row * (SCALE + xbet) + X_OFFSET, column * (SCALE + ybet) + Y_OFFSET, SCALE, SCALE);
-    }    
+     {
+       if(covered)
+       {
+         fill( 0, 10, 100 );
+         stroke( 10, 100, 200 );
+       }
+       else
+       {
+         fill( 100, 50, 100 );
+         stroke( 10, 100, 200 );
+       }
+       rect(row * (SCALE + xbet) + X_OFFSET, column * (SCALE + ybet) + Y_OFFSET, SCALE, SCALE);
+     }    
       
      
      void draw_boardobject()
-  {
-    draw_bbox(covered);
+     {
+       draw_bbox(covered);
     
-      if(covered)
-      {
+       if(covered)
+       {
          if(flag)
          {
             fill(0);
             text( ""+ "F" , row_to_pixel(row) + bWidth / 2, column_to_pixel(column) + bHeight / 2 );
          }
-      }
-      else
+       }
+       else
        {
           if(mine)
           {
@@ -243,22 +224,34 @@ class Boardobjects
           }
           else if(num != 0)
           {
-          fill(0);
-          text( ""+ number , row_to_pixel(row) + bWidth / 2, column_to_pixel(column) + bHeight / 2 );
-          }  
-         
+           fill(0);
+           text( str(num) , row_to_pixel(row) + bWidth / 2, column_to_pixel(column) + bHeight / 2 );
+          }   
        }
-    
-  }
-  
-   boolean click_inside( int cx, int cy )
-  {
-    boolean x1 = cx > row * SCALE; 
-    boolean x2 = cx < ( row * SCALE + bWidth ); 
-    boolean y1 = cy > column * SCALE; 
-    boolean y2 = cy < ( column * SCALE + bHeight );
-    return x1 && x2 && y1 && y2;
-  }
+     }
+       
+     void calc_box()
+     {
+       if(mine == false)
+       {
+         final int [] delta_y1={-1, -1, -1, 0, 0, 1, 1, 1};
+         final int [] delta_x1={-1, 0, 1, -1, 1, -1, 0, 1};
+         num=0;
+         
+         for (int k=0; k<8; k++)
+         {
+           int y_new = row + delta_y1[k];
+           int x_new = column + delta_x1[k];
+           if (!(y_new < 0) && (y_new < grid_length) && !(x_new < 0) && (x_new < grid_width))
+           {
+             if(board[y_new][x_new].mine == true)
+             {           
+               num++;
+             }
+            }
+         }
+       }
+    }
 }
 
    int pixel_to_row(int pixel_value)
