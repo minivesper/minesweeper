@@ -8,9 +8,13 @@ int ui_X = 5, ui_Y = 50;
 int num_mines = 10;
 boolean playing = true;
 
-
+/* setup()
+  This is a processing native function.
+  It is called once at the start of the program run
+*/
 void setup()
 {
+  // Set window size based on current number of board squares
   size((SCALE + xbet) * grid_length + ui_X, (SCALE + ybet) * grid_width + ui_Y);
   background(255);
   createboard();
@@ -18,6 +22,10 @@ void setup()
   drawboard();
 }
 
+/* mouseClicked()
+  This is a processing native function.
+  It is called everytime the mouse is clicked.
+*/
 void mouseClicked()
 {
   if(playing)
@@ -33,6 +41,10 @@ void mouseClicked()
   }
 }
 
+/* draw()
+  This is a processing native function.
+  It is called every frame (based on framerate variable.)
+*/
 void draw()
 {
  fill(255);
@@ -52,6 +64,9 @@ void draw()
   
 }
 
+/* createboard()
+  Allocates all the boxes
+*/
  void createboard()
   {
     board = new Boardobjects[grid_width][grid_length];
@@ -64,10 +79,15 @@ void draw()
     }
   }
   
+  /* setit()
+    Creates the mines
+    Sets other boxes with the surrounding mine count
+  */
   void setit()
   {
     int mine_counter = 0;
     boolean mines_unfull = true;
+    // Setting mines
     while( mines_unfull)
     { 
       if( mine_counter == num_mines)
@@ -82,13 +102,13 @@ void draw()
         mine_counter += 1;
       }
     }
-      for(int i=0; i<grid_width; i++)
+    for(int i=0; i<grid_width; i++)
+    {
+      for (int j=0; j<grid_length; j++)
       {
-        for (int j=0; j<grid_length; j++)
-        {
-          board[i][j].calc_box();
-        }
+        board[i][j].calc_box();
       }
+    }
   }
 
   void drawboard()
@@ -171,7 +191,14 @@ void draw()
         }
       }
 
-
+/* class Boardobjects
+  Each box in the minesweeper grid is an object
+  Methods:
+  Constructor - Boardobjects(row,column)
+  draw_bbox(boolean covered) - Draws the surrounding box colored based on covered value
+  draw_boardobject() - Draws whole box with text
+  calc_box() - Figures out the number (mine count) for this box
+*/
 class Boardobjects
 {
   boolean flag = false;
