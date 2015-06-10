@@ -26,7 +26,7 @@ void setup()
   This is a processing native function.
   It is called everytime the mouse is clicked.
 */
-void mouseClicked()
+void mouseClicked(MouseEvent ev)
 {
   if(playing)
   {
@@ -39,6 +39,7 @@ void mouseClicked()
   {
   drawboard();
   }
+  println(ev.getX());
 }
 
 /* draw()
@@ -113,13 +114,22 @@ void draw()
 
   void drawboard()
   {
-    for( int i = 0; i < grid_width; i++)
+    int count = 0;
+    for (Boardobjects[] ba : board)
+    {
+      for (Boardobjects b : ba)
+      {
+      b.draw_boardobject();
+      count++;
+      }
+    }
+    /*for( int i = 0; i < grid_width; i++)
     {
       for( int j = 0; j < grid_length; j++)
       {
          board[i][j].draw_boardobject();
       }
-    }
+    }*/
   }
 
     boolean win_or_lose(int x1, int y1)
