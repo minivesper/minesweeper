@@ -135,7 +135,7 @@ void draw()
     boolean win_or_lose(int x1, int y1)
     {
       int wincounter = 0;
-        if(mouseButton == LEFT && board[y1][x1].mine)
+        if(mouseButton == LEFT && board[y1][x1].mine && !board[y1][x1].flag )
         {
           board[y1][x1].covered = false;
           fill(0);
@@ -197,7 +197,7 @@ void draw()
         }
         if(mouseButton == RIGHT)
         {
-          board[y1][x1].flag = true;
+          board[y1][x1].flag = !board[y1][x1].flag;
         }
       }
 
