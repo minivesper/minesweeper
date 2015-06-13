@@ -1,6 +1,6 @@
 final int SCALE = 45, xbet = 5, ybet = 5;
 final int X_OFFSET = 5, Y_OFFSET = 2;
-Boardobjects [][] board;
+boardObj [][] board;
 int grid_width = 9;
 int grid_length = 9;
 int ui_X = 5, ui_Y = 50;
@@ -39,7 +39,7 @@ void mouseClicked(MouseEvent ev)
   {
   drawboard();
   }
-  println(ev.getX());
+  if (key == CODED && keyCode == SHIFT) println ("Yay SHIFT");
 }
 
 /* draw()
@@ -70,12 +70,12 @@ void draw()
 */
  void createboard()
   {
-    board = new Boardobjects[grid_width][grid_length];
+    board = new boardObj[grid_width][grid_length];
     for(int i = 0; i < grid_width; i++)
     {
       for( int j = 0; j < grid_length; j++)
       {
-        board[i][j] = new Boardobjects(i, j);
+        board[i][j] = new boardObj(i, j);
       }
     }
   }
@@ -115,9 +115,9 @@ void draw()
   void drawboard()
   {
     int count = 0;
-    for (Boardobjects[] ba : board)
+    for (boardObj[] ba : board)
     {
-      for (Boardobjects b : ba)
+      for (boardObj b : ba)
       {
       b.draw_boardobject();
       count++;
@@ -208,7 +208,7 @@ void draw()
   draw_bbox(boolean covered) - Draws the surrounding box colored based on covered value
   draw_boardobject() - Draws whole box with text
   calc_box() - Figures out the number (mine count) for this box
-*/
+
 class Boardobjects
 {
   boolean flag = false;
@@ -290,6 +290,7 @@ class Boardobjects
        }
     }
 }
+*/
 
    int pixel_to_row(int pixel_value)
  {
